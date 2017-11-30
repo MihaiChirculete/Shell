@@ -18,6 +18,11 @@
 #include "constants.h"
 #endif
 
+#ifndef _SHELL_DATA_TYPES
+#include "../data_types/data_types.h"
+#endif
+
+
 #ifndef _SHELL_UTILS
 #define _SHELL_UTILS
 #endif
@@ -59,10 +64,14 @@ int shell_interpret(const vector<string> args)
 	if(args[0].compare("exit") == 0)
 		return REQUEST_TERMINATE_SHELL;
 
+	// if no other action was taken it means the command doesn't exist
+	else
+		cout << "Command does not exist!\n";
+
 	return STATUS_RUNNING;
 }
 
-int shell_loop()
+int shell_loop(ShellData *sd)
 {
 	int status = STATUS_RUNNING;
 	string input;
@@ -77,7 +86,7 @@ int shell_loop()
 		args.clear();
 
 		// display the prompt
-		cout << "> ";
+		cout << sd->prompt;
 
 		// read the input
 		getline(cin, input);
