@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "data_types/data_types.h"
 #include "utils/constants.h"
 #include "utils/utils.h"
 
@@ -19,9 +20,11 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+	ShellData *sd = new ShellData();
+	sd->prompt = "> ";
 
 	// the main loop of the shell
-	shell_loop();
+	shell_loop(sd);
 
 	return EXIT_SUCCESS;
 }
