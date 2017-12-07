@@ -21,7 +21,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	ShellData *sd = new ShellData();
-	sd->prompt = "> ";
+	sd->variables["prompt"] = "> ";
 
 	// the main loop of the shell
 	shell_loop(sd);

@@ -29,6 +29,21 @@
 
 using namespace std;
 
+
+/*
+**	int doesExecutableExist(string executableName, ShellData *sd)
+**
+**	Expects the name of an executable and the ShellData
+**
+**	Searches for the executable's name in the path given by sd->variables["PATH"]
+**	and returns 0 if the executable wasnt found and 1 if it was.
+**
+*/
+int doesExecutableExist(string executableName, ShellData *sd)
+{
+	return 0;
+}
+
 /*
 **	void split_input(string INPUT, vector<string> &ARGS)
 **
@@ -59,11 +74,31 @@ void split_input(string input, vector<string> &args)
 **
 **	Returns a value defined in constants.h
 */
-int shell_interpret(const vector<string> args)
+int shell_interpret(const vector<string> args, ShellData *sd)
 {
 	if(args[0].compare("exit") == 0)
 		return REQUEST_TERMINATE_SHELL;
 
+	// setting shell variables
+	else if(args[0].compare("set") == 0)
+	{
+		if(args.size() == 3)
+			sd->variables[args[1]] = args[2];
+		else if(args.size() == 1)	// display all the current variables and their values
+		{
+			cout << "Variables:\n";
+			for (auto it = sd->variables.cbegin(); it != sd->variables.cend(); ++it)
+    			cout << (*it).first << " = " << (*it).second << "\n";
+		}
+		else
+			cout << "set VARIABLE_NAME VARIABLE_VALUE\n";
+	}
+
+	// if there is an executable in PATH matching args[0] then run it
+	else if(doesExecutableExist(args[0], sd))
+	{
+
+	}
 	// if no other action was taken it means the command doesn't exist
 	else
 		cout << "Command does not exist!\n";
@@ -86,7 +121,7 @@ int shell_loop(ShellData *sd)
 		args.clear();
 
 		// display the prompt
-		cout << sd->prompt;
+		cout << sd->variables["prompt"];
 
 		// read the input
 		getline(cin, input);
@@ -95,7 +130,8 @@ int shell_loop(ShellData *sd)
 		split_input(input, args);
 
 		// interpret the args
-		status = shell_interpret(args);
+		if(args.size() > 0)
+			status = shell_interpret(args, sd);
 
 	}while(status != REQUEST_TERMINATE_SHELL);
 

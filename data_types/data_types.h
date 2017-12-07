@@ -11,39 +11,17 @@
 #include <iostream>
 #endif
 
+#ifndef _GLIBCXX_VECTOR
+#include <vector>
+#endif
+
+#ifndef _GLIBCXX_MAP
+#include <map>
+#endif
+
 using namespace std;
-
-// used for local shell variables
-class GenericVariable{
-	private:
-		string name;
-		string value;
-
-	public:
-		GenericVariable(string name, string value)
-		{
-
-			this->name = name;
-			this->value = value;
-		}
-
-		string getName()
-		{
-			return this->name;
-		}
-
-		string getValue()
-		{
-			return this->value;
-		}
-
-		void setName(string name) { this->name = name; }
-		void setValue(string value) { this->value = value; }
-};
 
 class ShellData{
 	public:
-		string current_dir;	// the path of the directory we are inside
-		string prompt;	// the shell's prompt
-		string PATH;	// the PATH variable of the shell (where executables will be searched)
+		map<string, string> variables;	// the SHELL variables
 };
