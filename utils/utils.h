@@ -102,9 +102,11 @@ int shell_interpret(const vector<string> args, ShellData *sd)
 			sd->variables[args[1]] = args[2];
 		else if(args.size() == 1)	// display all the current variables and their values
 		{
-			cout << "Variables:\n";
+			cout << GRN << BOLD_ON << " Variables:\n";
 			for (auto it = sd->variables.cbegin(); it != sd->variables.cend(); ++it)
-    			cout << (*it).first << " = " << (*it).second << "\n";
+    			cout << "    " << (*it).first << " = " << (*it).second << "\n";
+
+    		cout << BOLD_OFF << NRM;
 		}
 		else
 			cout << "set VARIABLE_NAME VARIABLE_VALUE\n";
@@ -117,7 +119,7 @@ int shell_interpret(const vector<string> args, ShellData *sd)
 	}
 	// if no other action was taken it means the command doesn't exist
 	else
-		cout << "Command does not exist!\n";
+		cout << RED << BOLD_ON << "Command does not exist!\n" << BOLD_OFF << NRM;
 
 	return STATUS_RUNNING;
 }
