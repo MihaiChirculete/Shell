@@ -1,8 +1,8 @@
 all:
-	g++ main.cpp -o shell
+	g++ main.cpp -o out/shell
 
 run: all
-	./shell
+	./out/shell
 
 clean:
 	rm shell
