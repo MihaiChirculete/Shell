@@ -5,4 +5,4 @@ run: all
 	./out/shell
 
 clean:
-	rm shell
+	rm out/shell
