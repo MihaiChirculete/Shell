@@ -10,10 +10,6 @@
 #include <vector>
 #endif
 
-#ifndef _GLIBCXX_SSTREAM
-#include <sstream>
-#endif
-
 #ifndef _SHELL_CONSTANTS
 #include "constants.h"
 #endif
@@ -53,17 +49,37 @@ int doesExecutableExist(string executableName, ShellData *sd)
 **	At the end of the execution the ARGS vector will contain the split input
 */
 void split_input(string input, vector<string> &args)
-{
-	istringstream ss(input);
+{	
 	string arg;
+	int i = 0;
+	char wait_for_closing = 0;	// set to ' or " when encountering a ' or " and set back to 0 when the ending char was encountered
+	char c;
+	while((c = input[i]) != '\0')
+	{
+		if((c == '\"' || c == '\'') && wait_for_closing == 0)
+			wait_for_closing = c;
+		
+		else if(c == wait_for_closing)
+			wait_for_closing = 0;	// character found, sequence ended
 
-	// clear the args vector
-	args.clear();
+		else if(c != ' ' && wait_for_closing == 0)
+			arg += c;
 
-	// parse the input and add the args to the vector
-	while(getline(ss, arg, ' ')) {
-	    args.push_back(arg);
+		else if(wait_for_closing != 0)
+			arg += c;
+		
+		else if(arg.length() > 0)
+		{
+			args.push_back(arg);
+			arg.clear();
+		}
+
+		i++;
 	}
+
+	// push the last built argument (since the loop stops without pushing it when encountering \0)
+	args.push_back(arg);
+	arg.clear();
 }
 
 
