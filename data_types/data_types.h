@@ -23,5 +23,6 @@ using namespace std;
 
 class ShellData{
 	public:
+		vector<string> cmd_buf;
 		map<string, string> variables;	// the SHELL variables
 };

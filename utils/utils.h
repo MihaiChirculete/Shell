@@ -25,6 +25,26 @@
 
 using namespace std;
 
+/*
+**	int fileExists(string filePath)
+**
+**	Expects the path of a file.
+**
+**	Returns 1 if the file exists and 0 if not.
+**
+*/
+int fileExists(string path)
+{
+	//FILE* fp = fopen(path, "r");
+
+	//if(fp != NULL)
+	{
+		//fclose(fp);
+		//return 1;
+	}
+
+	return 0;
+}
 
 /*
 **	int doesExecutableExist(string executableName, ShellData *sd)
@@ -37,6 +57,12 @@ using namespace std;
 */
 int doesExecutableExist(string executableName, ShellData *sd)
 {
+	// if the executable name starts with / it's an absolute path
+	// and no search is required. Just check if the binary exists and run it
+
+	// if(executableName[0] == '/' && fileExists(executable))
+	//		launch_executable(executableName);
+
 	return 0;
 }
 
