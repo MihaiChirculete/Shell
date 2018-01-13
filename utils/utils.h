@@ -35,35 +35,69 @@ using namespace std;
 */
 int fileExists(string path)
 {
-	//FILE* fp = fopen(path, "r");
+	FILE* fp = fopen(path.c_str(), "r");
 
-	//if(fp != NULL)
+	if(fp != NULL)
 	{
-		//fclose(fp);
-		//return 1;
+		fclose(fp);
+		return 1;
+	}
+
+	return 0;
+}
+
+int runExecutable(string path, string executableName, ShellData *sd)
+{
+	char *execName = const_cast<char*>(executableName.c_str());
+	char *execNameAndPath = const_cast<char*>((path + executableName).c_str());
+
+	pid_t pid = fork();
+	if(pid < 0)
+		return errno;
+	else if (pid == 0)
+	{
+		char *argv[] = {execName, NULL};
+		execve(execNameAndPath, sd->argv, NULL);
+		perror(NULL);
+	}
+	else
+	{
+		wait(NULL);
 	}
 
 	return 0;
 }
 
 /*
-**	int doesExecutableExist(string executableName, ShellData *sd)
+**	int findExecutableAndRun(string executableName, ShellData *sd)
 **
 **	Expects the name of an executable and the ShellData
 **
 **	Searches for the executable's name in the path given by sd->variables["PATH"]
-**	and returns 0 if the executable wasnt found and 1 if it was.
+**	and returns 1 if run successfully, 0 otherwise.
 **
 */
-int doesExecutableExist(string executableName, ShellData *sd)
+int findExecutableAndRun(string executableName, ShellData *sd)
 {
+	string path;
+	path.clear();
+
 	// if the executable name starts with / it's an absolute path
 	// and no search is required. Just check if the binary exists and run it
+	if(executableName[0] == '/' && fileExists(executableName))
+		return runExecutable(path, executableName, sd);
 
-	// if(executableName[0] == '/' && fileExists(executable))
-	//		launch_executable(executableName);
+	// if it is not an absolute path search the PATH variable
+	// and run the executable if found
+	istringstream ss(sd->variables["PATH"]);
+	string chunk;
 
-	return 0;
+	while(getline(ss, chunk, ':')) {
+	    if(fileExists(chunk + executableName))
+	    	return runExecutable(chunk, executableName, sd);
+	}
+
+	return -1;
 }
 
 /*
@@ -139,9 +173,9 @@ int shell_interpret(const vector<string> args, ShellData *sd)
 	}
 
 	// if there is an executable in PATH matching args[0] then run it
-	else if(doesExecutableExist(args[0], sd))
+	else if(findExecutableAndRun(args[0], sd) != -1)
 	{
-
+		return STATUS_RUNNING;
 	}
 	// if no other action was taken it means the command doesn't exist
 	else

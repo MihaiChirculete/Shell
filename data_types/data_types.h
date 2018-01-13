@@ -23,6 +23,8 @@ using namespace std;
 
 class ShellData{
 	public:
+		int argc;	// arg count
+		char **argv;	// args passed to the shell when it is started
 		vector<string> cmd_buf;
 		map<string, string> variables;	// the SHELL variables
 };
