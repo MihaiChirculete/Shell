@@ -1,4 +1,5 @@
 all:
+	mkdir -p out/
 	g++ main.cpp -o out/shell
 
 run: all
