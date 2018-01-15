@@ -25,6 +25,29 @@
 
 using namespace std;
 
+char** stringArrayToCharMatrix(vector<string> strings, int n)
+{
+	char** stringsMatrix = NULL;
+
+	if(n <= 0)
+		return stringsMatrix;
+
+	stringsMatrix = (char**)malloc(n+1 * sizeof(char*));
+
+	int i;
+	for (i=0; i<n; i++)
+	{
+	    stringsMatrix[i] = (char*)malloc(1024 * sizeof(char));
+	    stringsMatrix[i] = const_cast<char*>(strings[i].c_str());
+	}
+
+	// add a NULL element to  the matrix at the end
+	// required when passing a char matrix as arguments pointer to execve
+	stringsMatrix[i] = NULL;
+
+	return stringsMatrix;
+}
+
 /*
 **	int fileExists(string filePath)
 **
@@ -46,7 +69,15 @@ int fileExists(string path)
 	return 0;
 }
 
-int runExecutable(string path, string executableName, ShellData *sd)
+/*
+**	int fileExists(string filePath)
+**
+**	Runs an executable specified by path and name with given arguments.
+**
+**	Returns 0 upon success and errno otherwise.
+**
+*/
+int runExecutable(string path, string executableName, vector<string> args)
 {
 	char *execName = const_cast<char*>(executableName.c_str());
 	char *execNameAndPath = const_cast<char*>((path + executableName).c_str());
@@ -56,8 +87,8 @@ int runExecutable(string path, string executableName, ShellData *sd)
 		return errno;
 	else if (pid == 0)
 	{
-		char *argv[] = {execName, NULL};
-		execve(execNameAndPath, sd->argv, NULL);
+		char** arguments = stringArrayToCharMatrix(args, args.size());
+		execve(execNameAndPath, arguments, NULL);
 		perror(NULL);
 	}
 	else
@@ -77,7 +108,7 @@ int runExecutable(string path, string executableName, ShellData *sd)
 **	and returns 1 if run successfully, 0 otherwise.
 **
 */
-int findExecutableAndRun(string executableName, ShellData *sd)
+int findExecutableAndRun(string executableName, vector<string> args, ShellData *sd)
 {
 	string path;
 	path.clear();
@@ -85,7 +116,7 @@ int findExecutableAndRun(string executableName, ShellData *sd)
 	// if the executable name starts with / it's an absolute path
 	// and no search is required. Just check if the binary exists and run it
 	if(executableName[0] == '/' && fileExists(executableName))
-		return runExecutable(path, executableName, sd);
+		return runExecutable(path, executableName, args);
 
 	// if it is not an absolute path search the PATH variable
 	// and run the executable if found
@@ -94,7 +125,7 @@ int findExecutableAndRun(string executableName, ShellData *sd)
 
 	while(getline(ss, chunk, ':')) {
 	    if(fileExists(chunk + executableName))
-	    	return runExecutable(chunk, executableName, sd);
+	    	return runExecutable(chunk, executableName, args);
 	}
 
 	return -1;
@@ -189,8 +220,9 @@ int shell_interpret(const vector<string> args, ShellData *sd)
 		}
 	}
 	// if there is an executable in PATH matching args[0] then run it
-	else if(findExecutableAndRun(args[0], sd) != -1)
+	else if(findExecutableAndRun(args[0], args, sd) != -1)
 	{
+		cout << endl;	// add a newline after the program output
 		return STATUS_RUNNING;
 	}
 	// if no other action was taken it means the command doesn't exist
