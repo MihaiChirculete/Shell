@@ -5,6 +5,7 @@
 
 # Commands currently implemented
     set VARIABLE_NAME VARIABLE_VALUE:	sets a shell variable
+    cd DIR: changes current working directory to the given DIR
     exit: terminates the shell
 
 # Features currently present
