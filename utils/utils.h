@@ -37,12 +37,14 @@ char** stringArrayToCharMatrix(vector<string> strings, int n)
 	int i;
 	for (i=0; i<n; i++)
 	{
+	
 	    stringsMatrix[i] = (char*)malloc(1024 * sizeof(char));
 	    stringsMatrix[i] = const_cast<char*>(strings[i].c_str());
 	}
 
 	// add a NULL element to  the matrix at the end
 	// required when passing a char matrix as arguments pointer to execve
+	// (otherwise some programs will crash if given more than 1 argument with the BAD ADDRESS error)
 	stringsMatrix[i] = NULL;
 
 	return stringsMatrix;
@@ -69,6 +71,13 @@ int fileExists(string path)
 	return 0;
 }
 
+
+/*
+**	void sig_handler(int s)
+**
+**	Catches signals. (such as CTRL-C)
+**
+*/
 void sig_handler(int s){
 	cout << endl;
 	//exit(1); 
@@ -178,6 +187,27 @@ void split_input(string input, vector<string> &args)
 	arg.clear();
 }
 
+/*
+**	void parseArgs(vector<string> &args, ShellData* sd)
+**
+**	Expects a vector of arguments which it then parses. (replaces varnames with their content, etc)
+**
+*/
+void parseArgs(vector<string> &args, ShellData* sd)
+{
+	for(int i=0; i<args.size(); i++)
+	{
+		// check if the arg starts with $
+		// if it does it means it's a variable
+		// thus the arg should be replaced with the variable's content
+		if(args[i][0] == '$')
+		{
+			string varName;
+			varName.assign(args[i].c_str()+1);
+			args[i] = sd->variables[varName];
+		}
+	}
+}
 
 /*
 **	int shell_interpret(const vector<string> ARGS)
@@ -259,6 +289,9 @@ int shell_loop(ShellData *sd)
 
 		// split the input into args
 		split_input(input, args);
+
+		// parse the args
+		parseArgs(args, sd);
 
 		// interpret the args
 		if(args.size() > 0)
