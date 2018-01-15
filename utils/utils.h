@@ -69,6 +69,11 @@ int fileExists(string path)
 	return 0;
 }
 
+void sig_handler(int s){
+	cout << endl;
+	//exit(1); 
+}
+
 /*
 **	int fileExists(string filePath)
 **
@@ -77,7 +82,7 @@ int fileExists(string path)
 **	Returns 0 upon success and errno otherwise.
 **
 */
-int runExecutable(string path, string executableName, vector<string> args)
+int runExecutable(string path, string executableName, vector<string> args, ShellData* sd)
 {
 	char *execName = const_cast<char*>(executableName.c_str());
 	char *execNameAndPath = const_cast<char*>((path + executableName).c_str());
@@ -116,7 +121,7 @@ int findExecutableAndRun(string executableName, vector<string> args, ShellData *
 	// if the executable name starts with / it's an absolute path
 	// and no search is required. Just check if the binary exists and run it
 	if(executableName[0] == '/' && fileExists(executableName))
-		return runExecutable(path, executableName, args);
+		return runExecutable(path, executableName, args, sd);
 
 	// if it is not an absolute path search the PATH variable
 	// and run the executable if found
@@ -125,7 +130,7 @@ int findExecutableAndRun(string executableName, vector<string> args, ShellData *
 
 	while(getline(ss, chunk, ':')) {
 	    if(fileExists(chunk + executableName))
-	    	return runExecutable(chunk, executableName, args);
+	    	return runExecutable(chunk, executableName, args, sd);
 	}
 
 	return -1;

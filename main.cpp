@@ -13,6 +13,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <string>
 #include <string.h>
 #include <vector>
@@ -56,6 +57,9 @@ int main(int argc, char** argv)
 
 		// TO-DO: Add check for SCRIPT_FILE argument and interpret the file if found.
 	}
+
+	// set the signal handler
+	signal (SIGINT,sig_handler);
 
 	// the main loop of the shell
 	shell_loop(sd);
