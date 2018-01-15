@@ -171,7 +171,23 @@ int shell_interpret(const vector<string> args, ShellData *sd)
 		else
 			cout << "set VARIABLE_NAME VARIABLE_VALUE\n";
 	}
-
+	// changing the working dir
+	else if(args[0].compare("cd") == 0)
+	{
+		if(args.size() == 2)
+		{
+			if(chdir(const_cast<char*>(args[1].c_str())) != -1)
+				{
+					char *dir = (char*)malloc(2048);
+					getcwd(dir, 2048);
+					sd->variables["CURRENT_WORKING_DIR"].assign(dir, 2048);
+				}
+		}
+		else
+		{
+			cout << "Usage: cd PATH" << endl;
+		}
+	}
 	// if there is an executable in PATH matching args[0] then run it
 	else if(findExecutableAndRun(args[0], sd) != -1)
 	{
@@ -199,7 +215,7 @@ int shell_loop(ShellData *sd)
 		args.clear();
 
 		// display the prompt
-		cout << sd->variables["prompt"];
+		cout << sd->variables["PROMPT"];
 
 		// read the input
 		getline(cin, input);
