@@ -282,10 +282,18 @@ int shell_loop(ShellData *sd)
 		args.clear();
 
 		// display the prompt
-		cout << sd->variables["PROMPT"];
+		//cout << sd->variables["PROMPT"];
 
 		// read the input
-		getline(cin, input);
+		char* line_read = readline(sd->variables["PROMPT"].c_str());
+		input.assign(line_read);
+		
+		// If the line has any text in it, save it on the history.
+  		if (line_read && *line_read)
+    		add_history (line_read);
+		
+		// free the read line
+		free(line_read);
 
 		// split the input into args
 		split_input(input, args);

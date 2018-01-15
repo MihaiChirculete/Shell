@@ -1,6 +1,6 @@
 all:
 	mkdir -p out/
-	g++ main.cpp -o out/shell
+	g++ main.cpp -o out/shell -lreadline
 
 run: all
 	./out/shell

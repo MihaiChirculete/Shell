@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #include <string>
 #include <string.h>
 #include <vector>
@@ -36,7 +38,6 @@ int main(int argc, char** argv)
 	ShellData *sd = new ShellData();
 	sd->variables["PROMPT"] = "> ";		// the shell will crash if there is no prompt is not set
 	sd->variables["PATH"] = "/usr/bin/:/bin/:/sbin/:";	// the default PATH variable (used to search for binaries)
-	sd->variables["CMD_BUF_SIZE"] = "30";	// the size of the command history buffer
 	char *dir = (char*)malloc(2048);
 	getcwd(dir, 2048);
 	sd->variables["CURRENT_WORKING_DIR"].assign(dir, 2048);
