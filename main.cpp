@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -56,7 +57,13 @@ int main(int argc, char** argv)
 			return EXIT_SUCCESS;
 		}
 
-		// TO-DO: Add check for SCRIPT_FILE argument and interpret the file if found.
+		else{
+			int ret = runScript(argv[1], sd);
+			if(ret == REQUEST_TERMINATE_SHELL)
+				return EXIT_SUCCESS;
+			else
+				return ret;
+		}
 	}
 
 	// set the signal handler

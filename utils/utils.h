@@ -84,6 +84,16 @@ void sig_handler(int s){
 }
 
 /*
+**	int runScript(string path)
+**
+**	Tries to run a script specified by path.
+**
+**	Returns 0 upon success and -1 otherwise.
+**
+*/
+int runScript(string path);
+
+/*
 **	int fileExists(string filePath)
 **
 **	Runs an executable specified by path and name with given arguments.
@@ -265,6 +275,35 @@ int shell_interpret(const vector<string> args, ShellData *sd)
 		cout << RED << BOLD_ON << "Command does not exist!\n" << BOLD_OFF << NRM;
 
 	return STATUS_RUNNING;
+}
+
+int runScript(string path, ShellData *sd)
+{
+	ifstream script(path);
+	int status = STATUS_RUNNING;
+	string line;
+	vector<string> args;
+
+	if(!script.is_open())
+		return EXIT_ERROR;
+
+	while(getline(script, line))
+	{
+		// split the input into args
+		split_input(line, args);
+
+		// parse the args
+		parseArgs(args, sd);
+
+		// interpret the args
+		if(args.size() > 0)
+			status = shell_interpret(args, sd);
+
+		if(status == REQUEST_TERMINATE_SHELL)
+			return REQUEST_TERMINATE_SHELL;
+	}
+
+	return 0;
 }
 
 int shell_loop(ShellData *sd)
