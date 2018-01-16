@@ -53,6 +53,7 @@ int main(int argc, char** argv)
 			cout << "Usage: shell SCRIPT_FILE\n";
 			cout << "   The SCRIPT_FILE is optional. If it is provided, the shell will attempt to interpret the file and terminate.\n";
 			cout << "If no SCRIPT_FILE is provided an interactive shell session will be started.\n";
+			cout << "For more info check the " << BOLD_ON << YEL << "README.md " << BOLD_OFF << NRM << "file in the Shell repository.\n";
 
 			return EXIT_SUCCESS;
 		}
