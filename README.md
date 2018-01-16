@@ -17,3 +17,5 @@
 	mkdir $DIR_NAME
 	(and so on)
 
+    Also instead of running an interactive shell you can also run a script by calling the shell binary with the path of the script as an argument.
+
