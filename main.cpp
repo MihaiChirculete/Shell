@@ -61,8 +61,13 @@ int main(int argc, char** argv)
 			int ret = runScript(argv[1], sd);
 			if(ret == REQUEST_TERMINATE_SHELL)
 				return EXIT_SUCCESS;
-			else
+			else if(ret == EXIT_ERROR)
+			{
+				cout << RED << BOLD_ON << "An error occured!\n" << BOLD_OFF << NRM;
 				return ret;
+			}
+
+			return ret;
 		}
 	}
 
