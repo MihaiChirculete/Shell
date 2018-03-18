@@ -1,11 +1,8 @@
 /*
 **	Part of the Shell Project
 **
-**	Contributors: 
-**		- Chirculete Vlad Mihai
-**		- Stanciu Andrei Cristian
-**		- Pietreanu Cristina Madalina
-**
+**	Author: Chirculete Vlad Mihai
+**		
 **	This is the main file of the project.	
 */
 
